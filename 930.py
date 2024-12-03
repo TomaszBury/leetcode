@@ -14,7 +14,9 @@ def numSubarraysWithSum( nums: list[int], goal: int) -> int:
             non_empty_subarrays += freq[sub_sum - goal]
 
         freq[sub_sum] = freq.get(sub_sum, 0) + 1
-            
+
+    print(f"non:{non_empty_subarrays}")
+    print(f"freq:{freq[goal]}")
     return non_empty_subarrays
 
 
