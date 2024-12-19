@@ -2,18 +2,21 @@ class Solution:
     def isRobotBounded(instructions: str) -> bool:
         position:list[int] = [0,0]
         direction:str = "North"
+        
         l_movment:dict[str:str] = {
             "North":"West",
             "West":"South",
             "South":"East",
             "East":"North"
         }
+
         r_movment:dict[str:str] = {
             "North":"East",
             "East":"South",
             "South":"West",
             "West":"North"
         }
+
         for instruction in instructions:
             print(f"direction:{direction} position:{position}, intstuctions:{instruction}")
             if instruction in "L":
