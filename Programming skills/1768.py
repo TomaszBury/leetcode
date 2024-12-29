@@ -9,7 +9,12 @@ def mergeAlternately(word1: str, word2: str) -> str:
                 result += word2[len(word1):]
         return result
 
-word1 = "ab"
-word2 = "pqrs"
+word1 = "abc"; word2 = "pqr"
 
-print(mergeAlternately(word1, word2))
+assert mergeAlternately(word1, word2) == "apbqcr"
+
+word1 = "ab"; word2 = "pqrs"
+assert mergeAlternately(word1, word2) == "apbqrs"
+
+word1 = "abcd"; word2 = "pq"
+assert mergeAlternately(word1, word2) == "apbqcd"
