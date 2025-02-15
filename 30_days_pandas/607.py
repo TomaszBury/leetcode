@@ -8,14 +8,24 @@ def sales_person(sales_person: pd.DataFrame, company: pd.DataFrame, orders: pd.D
     # merged_df = orders_df.merge(company_df, on='com_id', how='outer')
 
     # Merge all three DataFrames
-    combined_df = (orders_df
-                .merge(salesperson_df, on='sales_id', how='outer')
-                .merge(company_df, on='com_id', how='outer'))
+    combined_df = pd.merge(sales_person, orders, on="sales_id", how="outer")
+
+    combined_df_df = pd.merge(combined_df, company, on="com_id", how="outer")
     
-    # mask_name_company = combined_df.loc[:,"name_y"] != "RED"
+    mask_name_company = combined_df_df.loc[:,"name_y"] == "RED"
+
+    list_of_names:list[str] = combined_df_df.loc[mask_name_company,"name_x"].tolist()
+
+    mask_names = ~combined_df_df.loc[:,"name_x"].isin(list_of_names) &~combined_df_df.loc[:,"name_x"].isnull()
+
+    return_df = combined_df_df.loc[mask_names,["name_x"]]
+
+    return_df.rename(columns={"name_x":"name"}, inplace=True)
     
-    # return combined_df.loc[mask_name_company,["name_x"]]
-    return combined_df
+    return_df_df = return_df[["name"]].drop_duplicates().reset_index(drop=True)
+    
+    return return_df_df
+    # return list_of_names
 
 
 # Create SalesPerson DataFrame
