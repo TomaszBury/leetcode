@@ -15,12 +15,10 @@ def rising_temperature(weather: pd.DataFrame) -> pd.DataFrame:
         if index < len(sorted_df)-1:
             date_str1 = sorted_df.iloc[index,1]
             date_str2 = sorted_df.iloc[index+1,1]
-            date1 = datetime.strptime(date_str1, '%Y-%m-%d')
-            date2 = datetime.strptime(date_str2, '%Y-%m-%d')
 
-            print(f"len:{len(sorted_df)} index:{index} day:{sorted_df.iloc[index,1]} tomorow:{sorted_df.iloc[index+1,1]} delta:{(date1 - date2).days}")
+            # print(f"len:{len(sorted_df)} index:{index} day:{sorted_df.iloc[index,1]} tomorow:{sorted_df.iloc[index+1,1]} delta:{(date1 - date2).days}")
 
-            if (date1 - date2).days == -1: 
+            if (date_str1 - date_str2).days == -1: 
                 temperature_today = sorted_df.iloc[index,2]
                 temperature_tomorow = sorted_df.iloc[index+1,2]
                 if temperature_today < temperature_tomorow:
@@ -37,6 +35,7 @@ data = {
 
 # Create DataFrame
 weather_df = pd.DataFrame(data)
+weather_df["recordDate"] = pd.to_datetime(weather_df['recordDate'], format='%Y-%m-%d')
 
 print(rising_temperature(weather_df))
 
@@ -53,6 +52,7 @@ data = {
 
 # Create DataFrame
 weather_df = pd.DataFrame(data)
+weather_df["recordDate"] = pd.to_datetime(weather_df['recordDate'], format='%Y-%m-%d')
 
 print(rising_temperature(weather_df))
 
@@ -64,6 +64,7 @@ data = {
 
 # Create DataFrame
 weather_df = pd.DataFrame(data)
+weather_df["recordDate"] = pd.to_datetime(weather_df['recordDate'], format='%Y-%m-%d')
 
 print(rising_temperature(weather_df))
 
