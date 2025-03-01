@@ -7,7 +7,7 @@ def swap_salary(salary: pd.DataFrame) -> pd.DataFrame:
     salary_f:pd.DataFrame = salary.loc[mask_f,:]
     salary_f.loc[:,"sex"] = "m"
     salary_m:pd.DataFrame = salary.loc[mask_m,:]
-    salary_m.loc[:,"sex"] = "m"
+    salary_m.loc[:,"sex"] = "f"
 
     
     return pd.concat([salary_f,salary_m])
@@ -20,3 +20,12 @@ salary_df = pd.DataFrame({
 })
 
 print(swap_salary(salary_df))
+
+df = pd.DataFrame({
+    'id': [1, 2, 3, 4],
+    'name': ['A', 'B', 'C', 'D'],
+    'sex': ['f', 'm', 'f', 'm'],
+    'salary': [2500, 1500, 5500, 500]
+})
+
+print(df)
