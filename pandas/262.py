@@ -1,18 +1,13 @@
 import pandas as pd
 
 def trips_and_users(trips: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
-    mask_completed:pd.Series = (trips.loc[:,"status"] == "completed")
-
-    if not mask_completed.any():
-        return pd.DataFrame({
-                            'Day': [],
-                            'Cancellation Rate': []
-                            })
+    mask_data:pd.Series = (trips.loc[:,"request_at"] != "2013-10-04")
 
     mask_banned:pd.Series = (users.loc[:,"banned"] == "No")
     users_not_banned:pd.DataFrame = users.loc[mask_banned,:]
-    return_df:pd.DataFrame = pd.merge(left=trips, right=users_not_banned, left_on=["client_id"], right_on=["users_id"])
-    return_df:pd.DataFrame = pd.merge(left=return_df, right=users, left_on=["driver_id"], right_on=["users_id"])
+    trips_data:pd.DataFrame = trips.loc[mask_data,:]
+    return_df:pd.DataFrame = pd.merge(left=trips_data, right=users_not_banned, left_on=["client_id"], right_on=["users_id"], how="inner")
+    return_df:pd.DataFrame = pd.merge(left=return_df, right=users_not_banned, left_on=["driver_id"], right_on=["users_id"])
 
     mask_cancelled_by_client:pd.Series = (return_df.loc[:,"status"] != "completed")
     cancelled_by_client:pd.DataFrame = return_df.loc[mask_cancelled_by_client,:].groupby("request_at")["status"].count().reindex(return_df['request_at'].unique(), fill_value=0).reset_index()
@@ -29,9 +24,9 @@ def trips_and_users(trips: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
 
     day_ratio.rename(columns={"request_at":"Day"}, inplace=True)
 
-    # return day_ratio.loc[:,["Day","Cancellation Rate"]]
-    return return_df
-
+    return day_ratio.loc[:,["Day","Cancellation Rate"]]
+    # return return_df
+print("-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=--=-=-=-=")
 trips_data = {
     'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     'client_id': [1, 2, 3, 4, 1, 2, 3, 2, 3, 4],
@@ -54,7 +49,7 @@ users_data = {
 }
 users_df = pd.DataFrame(users_data)
 
-print(trips_and_users(trips_df,users_df))
+# print(trips_and_users(trips_df,users_df))
 
 trips = pd.DataFrame({
     'id': [1],
@@ -72,7 +67,25 @@ users = pd.DataFrame({
     'role': ['client', 'driver']
 })
 
-print(trips_and_users(trips,users))
+# print(trips_and_users(trips,users))
+
+trips = pd.DataFrame({
+    'id': [1111],
+    'client_id': [1],
+    'driver_id': [10],
+    'city_id': [1],
+    'status': ['completed'],
+    'request_at': ['2013-10-01']
+})
+
+# Create the 'Users' DataFrame
+users = pd.DataFrame({
+    'users_id': [1, 10],
+    'banned': ['No', 'No'],
+    'role': ['client', 'driver']
+})
+
+print(trips_and_users(trips, users))
 
 trips = pd.DataFrame({
     'id': [1111],
@@ -91,3 +104,26 @@ users = pd.DataFrame({
 })
 
 print(trips_and_users(trips, users))
+
+# Create Trips dataframe
+trips_data = {
+    'id': [1],
+    'client_id': [1],
+    'driver_id': [10],
+    'city_id': [1],
+    'status': ['cancelled_by_client'],
+    'request_at': ['2013-10-04']
+}
+
+trips = pd.DataFrame(trips_data)
+
+# Create Users dataframe
+users_data = {
+    'users_id': [1, 10],
+    'banned': ['No', 'No'],
+    'role': ['client', 'driver']
+}
+
+users = pd.DataFrame(users_data)
+
+print(trips_and_users(trips,users))
