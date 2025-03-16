@@ -6,7 +6,7 @@ def trips_and_users(trips: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
     mask_banned:pd.Series = (users.loc[:,"banned"] == "No")
     users_not_banned:pd.DataFrame = users.loc[mask_banned,:]
     trips_data:pd.DataFrame = trips.loc[mask_data,:]
-    return_df:pd.DataFrame = pd.merge(left=trips_data, right=users_not_banned, left_on=["client_id"], right_on=["users_id"], how="inner")
+    return_df:pd.DataFrame = pd.merge(left=trips_dataf, right=users_not_banned, left_on=["client_id"], right_on=["users_id"], how="inner")
     return_df:pd.DataFrame = pd.merge(left=return_df, right=users_not_banned, left_on=["driver_id"], right_on=["users_id"])
 
     mask_cancelled_by_client:pd.Series = (return_df.loc[:,"status"] != "completed")
